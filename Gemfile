@@ -60,6 +60,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem 'rubocop', '~> 1.30.0'
+  gem 'rubocop-performance', '~> 1.0'
+  gem 'rubocop-rspec', '~> 2.0'
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
@@ -72,5 +75,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
-
+  #gem 'rspec', '~> 3.10'
+  gem 'rspec-rails'
+  gem 'rails-controller-testing'
 end

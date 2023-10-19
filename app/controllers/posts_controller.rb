@@ -1,12 +1,12 @@
 class PostsController < ApplicationController
     before_action :set_post, only: %i[ show edit update destroy ]
     before_action :authorize_user, except: [:index, :show]
-    pp(11111111111111111111111111) 
+    pp(11111) 
     # GET /posts or /posts.json
     def index
-        pp(222222222222222)
+        pp(2222)
         @posts = Post.all
-        @my_posts = Post.where(user_id: current_user.id)
+        @my_posts = Post.where(user_id: current_user.id) if current_user
     end
   
     # GET /posts/1 or /posts/1.json
@@ -80,16 +80,22 @@ class PostsController < ApplicationController
       end
     end
 
+    # def authorize_user
+    #     pp(1616161616161616161616)
+    #     if current_user
+    #         pp(17171717171717171717)
+    #       return true
+    #     else
+    #         pp(1818181818181818)
+    #       redirect_to root_path, alert: "You are not authorized to edit this post."
+    #     end
+    # end
+
     def authorize_user
-        pp(1616161616161616161616)
-        if current_user
-            pp(17171717171717171717)
-          return true
-        else
-            pp(1818181818181818)
+        unless current_user
           redirect_to root_path, alert: "You are not authorized to edit this post."
         end
-    end
+      end
   
     private
       # Use callbacks to share common setup or constraints between actions.
