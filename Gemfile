@@ -78,4 +78,5 @@ group :test do
   #gem 'rspec', '~> 3.10'
   gem 'rspec-rails'
   gem 'rails-controller-testing'
+  gem 'factory_bot_rails'
 end

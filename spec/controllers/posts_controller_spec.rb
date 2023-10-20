@@ -1,65 +1,50 @@
 require 'rails_helper'
 
 RSpec.describe PostsController, type: :controller do
-    include Devise::Test::ControllerHelpers
+  include Devise::Test::ControllerHelpers
 
-    before do
-        @user = User.create(
-            id: 1,
-            email: 'user@example.com',
-            encrypted_password: 'password',
-            created_at: '2023-10-17 11:31:17.614931',
-            updated_at: '2023-10-17 11:31:17.614931'
-        )
+  describe '#index' do
+    it 'returns a list of all posts' do
+      user = create(:user)  # Создание пользователя с помощью фабрики FactoryBot
+      post_1 = create(:post, user: user)# Создание поста с ассоциацией к пользователю
+      post_2 = create(:post)
 
-        @post_1 = Post.create(
-            id: 1,
-            description: 'This is my first post.',
-            user_id: @user.id,
-            created_at: '2023-10-17 11:31:17.614931',
-            updated_at: '2023-10-17 11:31:17.614931'
-        )
+      sign_in user
 
-        @post_2 = Post.create(
-            id: 2,
-            description: 'This is my first post.',
-            user_id: 2,
-            created_at: '2023-10-17 11:31:17.614931',
-            updated_at: '2023-10-17 11:31:17.614931'
-        ) 
+      get :index
 
-        sign_in @user 
-
-        @posts = []
-        @posts.push(@post_1, @post_2)
-        
+      expect(response).to be_successful
+      expect(response).to render_template(:index)
+      expect(assigns(:posts)).to include(post_2)
     end
 
-    describe '#index' do
-        it 'returns a list of all posts' do
-            get :index
+    it 'returns all posts of the current user' do
+      user = create(:user)
+      post_1 = create(:post, user: user)
+      post_2 = create(:post)  # Создание поста другого пользователя
 
-            expect(response).to be_successful
-            expect(response).to render_template(:index)#контроллер отображает правильный шаблон
-            expect(@posts).to include(@post_2)
-        end
+      sign_in user
 
-        it 'returns all posts of the current user' do
-            get :index
-    
-            expect(response).to be_successful
-            expect(response).to render_template(:index)#контроллер отображает правильный шаблон
-            expect(@post_1.user_id).to eq(@user.id)
-        end
+      get :index
+
+      expect(response).to be_successful
+      expect(response).to render_template(:index)#контроллер отображает правильный шаблон
+      expect(assigns(:posts)).to include(post_1)
     end
+  end
 
-    describe '#show' do
-        it 'returns a specific post by id' do
-            get :show, params: { id: @post_1.id }
-            
-            expect(response).to be_successful
-            expect(response).to render_template(:show)#контроллер отображает правильный шаблон
-            expect(assigns(:post)).to be_present
-        end
+  describe '#show' do
+    it 'returns a specific post by id' do
+      user = create(:user)
+      post = create(:post, user: user)
+
+      sign_in user
+
+      get :show, params: { id: post.id }
+
+      expect(response).to be_successful
+      expect(response).to render_template(:show)
+      expect(assigns(:post)).to eq(post)
     end
+  end
 end
